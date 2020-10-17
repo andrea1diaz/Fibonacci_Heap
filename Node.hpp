@@ -24,10 +24,23 @@ public:
 		grado = 0;
 	}
 
-	void add_children (Node<T> *child) {
+	void init_children (Node<T> node) {
+		tail = head = node;
+
+		tail->prev = head;
+		tail->next = head;
+		head->prev = tail;
+		head->next = tail;
+	}
+
+
+	void add_child (Node<T> *child) {
 		tail->next = child;
 		child->prev = tail;
-		
+		child->next = head;
+		head->prev = child;
+
+		tail = child;
 	}
 
 	void print_children () {

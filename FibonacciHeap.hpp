@@ -16,17 +16,6 @@ private:
 	Node<T> *min;
 	Node<T> *head;
 	Node<T> *tail;
-	void decrease_key(Node<T> *node, T new_key) {
-        node->key = new_key;
-        Node<T> *current = node;
-        T tmp;
-        while(current->parent && current->parent->key > current->key) {
-            tmp = current->parent->key;
-            current->parent->key = current->key;
-            current->key = tmp;
-            current = current->parent;
-        }
-    }
 
 public:
 	FibonacciHeap() {
@@ -58,7 +47,7 @@ public:
 		size ++;
 	}
 
-	void  compact_tree () {
+	void compact_tree () {
 		grados = vector<Node*>(size, nullptr);
 		Node<T> *current = head;
 		
@@ -76,48 +65,131 @@ public:
 	void unite (Node<T> *first_node, Node<T> *second_node) {
 		if(first_node->key < second_node->key) {
 			second_node->parent = first_node;
-			if(!first->node->head) {
-				initChildren(second_node);
+			if(!first_node->head) {
+				first_node->init_children(second_node);
 			}
 			else {
-				addChild(second_node);
+				first_node->add_child(second_node);
 			}
+			first_node->grado++;
 		}
 		else {
-			if(!head) {
-				initChildren(second_node);
+			first_node->parent = second_node;
+			if(!second_node->head) {
+				second_node->init_children(first_node);
 			}
 			else {
-				addChild(second_node);
+				second_node->add_child(first_node);
 			}
+			second_node->grado++;
 		}
 	}
 
 	Node<T>* get_min () {
-        // asumimos que size > 0
-        Node<T> *min_node = new Node<T>(std::numeric_limits<T>::max());
-        for (auto x : grados)
-            if(x)
-                min_node = min_node->key < x->key ? min_node : x;
-        return min_node;
+        return min;
     }
 
-	void delete_min() {
-        Node<T>* min_node = get_min();
-        size--;
-        grados[min_node->grado] = nullptr;
-        for(auto x : min_node->children)
-            compact_tree(x);
-        delete min_node;
+	void extract_min() {
+		meld(min);
+		delete min;
+		min = new_min();
+
+		compact_tree();
     }
 
+	Node<T>* new_min() {
+		Node<T>* current = head;
+		Node<T>* min = current;
+		do {
+			if (current->key < min->key) min = current;
+			current = current->next;
+		} while(current != head);
+		return min;
+	}
+
+	void meld(Node<T> *node) {
+		if(!node->head) return;
+		node->prev->next = node->next;
+		node->next->prev = node->prev;
+		
+		tail->next = node->head;
+		node->head->prev = tail;
+		node->tail->next = head;
+		head->prev = node->tail;
+		tail = node->tail;
+	}
 	
-	void delete_key(T k) {
-        Node<T>* node = search(k);
-        if (node) {
-            decrease_key(node, std::numeric_limits<T>::min());
-            delete_min();
-        }
+	void decrease_key(Node<T> *node, T new_key) {
+        node->key = new_key;
+
+		if (!node->parent)
+			if (min->key > new_key)
+				min = node;
+
+		else {
+			if (node->parent->key > new_key) {
+					node->isBlack = false;
+					
+					node->prev->next = node->next;
+					node->next->prev = node->prev;
+
+					tail->next = node;
+					node->prev = tail;
+					node->next = head;
+					head->prev = node;
+
+					tail = node;
+
+					node->parent->grado--;
+
+				if (!node->parent->isBlack) {
+					node->parent->isBlack = true;
+					node->parent = nullptr;
+
+					compact_tree();
+				}
+
+				else {
+					Node<T> *current = node->parent;
+					Node<T> *tmp = current;
+					
+					do {
+						current->prev->next = current->next;
+						current->next->prev = current->prev;
+
+						tail->next = current;
+						current->prev = tail;
+						current->next = head;
+						head->prev = current;
+
+						tail = node;
+
+						current->isBlack = false;
+
+						tmp = current;
+						current = current->parent;
+						current->grado--;
+						
+						tmp->parent = nullptr; // voy a revisarlo una vez más, pero lo subo y lo pruebas? 
+						
+					} while (current->parent->isBlack && current->parent);
+				}
+			}
+			
+			else {
+				// nada
+			}
+		}
+
+        /*Node<T> *current = node;
+        T tmp;
+        while(current->parent && current->parent->key > current->key) {
+            tmp = current->parent->key;
+            current->parent->key = current->key;
+            current->key = tmp;
+            current = current->parent;
+        }*/
+		
     }
 
 	void print_heap () {
@@ -128,17 +200,6 @@ public:
 			}
 		}
 	}
-	
-	Node<T>* search(T value) {
-        for(int i = 0; i < grados.size(); ++i) {
-            if (grados[i]) {
-                auto aux = searchAux(grados[i], value);
-                if (aux)
-                    return aux;
-            }
-        }
-        return nullptr;
-    }
 
 	void buildFromInput() {
         T n;
