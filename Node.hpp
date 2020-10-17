@@ -11,12 +11,23 @@ public:
 	T key;
 	std::list<Node<T> *> children;
 	Node<T> *parent;
+	Node<T> *next;
+	Node<T> *prev;
+	Node<T> *head;
+	Node<T> *tail;
+	bool isBlack = false;
 
 	Node();
 
 	Node (T data) {
 		key = data;
 		grado = 0;
+	}
+
+	void add_children (Node<T> *child) {
+		tail->next = child;
+		child->prev = tail;
+		
 	}
 
 	void print_children () {
@@ -31,6 +42,8 @@ public:
 		}
 		std::cout << "\n";
 	}
+
+
 };
 
 #endif /* NODE_H */

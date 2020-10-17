@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "BinomialHeap.hpp"
+#include "FibonacciHeap.hpp"
 
 int main () {
-	BinomialHeap<int> bh;
+	FibonacciHeap<int> bh;
 
 	bh.insert(1);
 	bh.insert(2);
