@@ -11,5 +11,7 @@ int main () {
 	bh.insert(5);
 
 	bh.print_heap();
+	bh.extract_min();
+	bh.print_heap();
 	return 0;
 }

@@ -24,7 +24,7 @@ public:
 		grado = 0;
 	}
 
-	void init_children (Node<T> node) {
+	void init_children (Node<T>* node) {
 		tail = head = node;
 
 		tail->prev = head;

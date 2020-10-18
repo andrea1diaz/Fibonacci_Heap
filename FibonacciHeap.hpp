@@ -48,7 +48,7 @@ public:
 	}
 
 	void compact_tree () {
-		grados = vector<Node*>(size, nullptr);
+		grados = std::vector<Node<T> *>(size, nullptr);
 		Node<T> *current = head;
 		
 		do {
@@ -89,12 +89,14 @@ public:
         return min;
     }
 
-	void extract_min() {
+	T extract_min() {
 		meld(min);
+		T value = min->key;
 		delete min;
 		min = new_min();
 
 		compact_tree();
+		return value;
     }
 
 	Node<T>* new_min() {
@@ -122,9 +124,10 @@ public:
 	void decrease_key(Node<T> *node, T new_key) {
         node->key = new_key;
 
-		if (!node->parent)
+		if (!node->parent) {
 			if (min->key > new_key)
 				min = node;
+		}
 
 		else {
 			if (node->parent->key > new_key) {
@@ -193,12 +196,24 @@ public:
     }
 
 	void print_heap () {
-		for (auto i : grados) {
-			if (i) {
-				std::cout << i->key << "\n";
-				i->print_children();
-			}
+		auto cur = head;
+		if (cur) {
+			std::cout << cur->key << std::endl;
+			cur->print_children();
+			cur = cur->next;
 		}
+		while (cur && cur != head) {
+			std::cout << '\n';
+			std::cout << cur->key << std::endl;
+			cur->print_children();
+			cur = cur->next;
+		}
+		// for (auto i : grados) {
+		// 	if (i) {
+		// 		std::cout << i->key << "\n";
+		// 		i->print_children();
+		// 	}
+		// }
 	}
 
 	void buildFromInput() {
