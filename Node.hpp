@@ -10,11 +10,11 @@ public:
 	int grado;
 	T key;
 	std::list<Node<T> *> children;
-	Node<T> *parent;
-	Node<T> *next;
-	Node<T> *prev;
-	Node<T> *head;
-	Node<T> *tail;
+	Node<T> *parent = nullptr;
+	Node<T> *next = nullptr;
+	Node<T> *prev = nullptr;
+	Node<T> *head = nullptr;
+	Node<T> *tail = nullptr;
 	bool isBlack = false;
 
 	Node();

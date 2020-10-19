@@ -50,19 +50,45 @@ public:
 	void compact_tree () {
 		grados = std::vector<Node<T> *>(size, nullptr);
 		Node<T> *current = head;
+        Node<T> *aux1 = nullptr;
+        Node<T> *aux2 = nullptr;
+		bool help = false;
 		
 		do {
 			if(grados[current->grado]) {
-				unite(grados[current->grado], current);
+                if (current->key < grados[current->grado]->key) {
+                    grados[current->grado]->next->prev = grados[current->grado]->prev;
+                    grados[current->grado]->prev->next = grados[current->grado]->next;
+                } else {
+                    help = true;
+                    aux2 = current->next;
+                    aux1 = current->prev;
+                }
+				auto tmp = unite(grados[current->grado], current);
+				if (tmp->tail == head) {
+				    head = head->next;
+				}
+				if (tmp->tail == tail) {
+				    tail = tail->prev;
+				}
+				grados[tmp->grado] = tmp;
+				grados[tmp->grado - 1] = nullptr;
 			}
 			else {
 				grados[current->grado] = current;
 			}
-			current = current->next;
+			if (!help)
+			    current = current->next;
+			else {
+			    help = false;
+			    aux1->next = aux2;
+			    aux2->prev = aux1;
+			    current = aux2;
+			}
 		} while(current != head);
 	}
 
-	void unite (Node<T> *first_node, Node<T> *second_node) {
+	Node<T>* unite (Node<T> *first_node, Node<T> *second_node) {
 		if(first_node->key < second_node->key) {
 			second_node->parent = first_node;
 			if(!first_node->head) {
@@ -72,6 +98,7 @@ public:
 				first_node->add_child(second_node);
 			}
 			first_node->grado++;
+			return first_node;
 		}
 		else {
 			first_node->parent = second_node;
@@ -82,6 +109,7 @@ public:
 				second_node->add_child(first_node);
 			}
 			second_node->grado++;
+            return second_node;
 		}
 	}
 
@@ -92,6 +120,13 @@ public:
 	T extract_min() {
 		meld(min);
 		T value = min->key;
+		if (min == head) {
+		    head = min->next;
+		}
+		if (min == tail) {
+		    tail = min->prev;
+		}
+
 		delete min;
 		min = new_min();
 
@@ -110,15 +145,20 @@ public:
 	}
 
 	void meld(Node<T> *node) {
-		if(!node->head) return;
-		node->prev->next = node->next;
-		node->next->prev = node->prev;
-		
-		tail->next = node->head;
-		node->head->prev = tail;
-		node->tail->next = head;
-		head->prev = node->tail;
-		tail = node->tail;
+        node->prev->next = node->next;
+        node->next->prev = node->prev;
+
+		if(!node->head) {
+		    return;
+		}
+
+		else {
+            tail->next = node->head;
+            node->head->prev = tail;
+            node->tail->next = head;
+            head->prev = node->tail;
+            tail = node->tail;
+        }
 	}
 	
 	void decrease_key(Node<T> *node, T new_key) {

@@ -12,6 +12,7 @@ int main () {
 
 	bh.print_heap();
 	bh.extract_min();
+	std::cout << "====" << std::endl;
 	bh.print_heap();
 	return 0;
 }
