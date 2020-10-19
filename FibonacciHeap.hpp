@@ -16,6 +16,9 @@ private:
 	Node<T> *min;
 	Node<T> *head;
 	Node<T> *tail;
+    bool help = false;
+    Node<T> *head_next = nullptr;
+    Node<T> *tail_prev = nullptr;
 
 public:
 	FibonacciHeap() {
@@ -47,44 +50,46 @@ public:
 		size ++;
 	}
 
+private:
+    void compact_helper(Node<T>* node) {
+        if (node->key < grados[node->grado]->key) {
+            grados[node->grado]->next->prev = grados[node->grado]->prev;
+            grados[node->grado]->prev->next = grados[node->grado]->next;
+        } else {
+            node->next->prev = node->prev;
+            node->prev->next = node->next;
+        }
+        auto tmp = unite(node, grados[node->grado]);
+        if (tmp->tail == head) {
+            head = head_next;
+        }
+        if (tmp->tail == tail) {
+            tail = tail_prev;
+        }
+        grados[tmp->grado - 1] = nullptr;
+        if (grados[tmp->grado]) {
+            compact_helper(tmp);
+        } else {
+            grados[tmp->grado] = tmp;
+        }
+	}
+public:
+
 	void compact_tree () {
 		grados = std::vector<Node<T> *>(size, nullptr);
 		Node<T> *current = head;
-        Node<T> *aux1 = nullptr;
-        Node<T> *aux2 = nullptr;
-		bool help = false;
 		
 		do {
+		    head_next = head->next;
+		    tail_prev = tail->prev;
+		    auto cur_next = current->next;
 			if(grados[current->grado]) {
-                if (current->key < grados[current->grado]->key) {
-                    grados[current->grado]->next->prev = grados[current->grado]->prev;
-                    grados[current->grado]->prev->next = grados[current->grado]->next;
-                } else {
-                    help = true;
-                    aux2 = current->next;
-                    aux1 = current->prev;
-                }
-				auto tmp = unite(grados[current->grado], current);
-				if (tmp->tail == head) {
-				    head = head->next;
-				}
-				if (tmp->tail == tail) {
-				    tail = tail->prev;
-				}
-				grados[tmp->grado] = tmp;
-				grados[tmp->grado - 1] = nullptr;
+			    compact_helper(current);
 			}
 			else {
 				grados[current->grado] = current;
 			}
-			if (!help)
-			    current = current->next;
-			else {
-			    help = false;
-			    aux1->next = aux2;
-			    aux2->prev = aux1;
-			    current = aux2;
-			}
+			current = cur_next;
 		} while(current != head);
 	}
 
@@ -238,22 +243,22 @@ public:
 	void print_heap () {
 		auto cur = head;
 		if (cur) {
-			std::cout << cur->key << std::endl;
-			cur->print_children();
-			cur = cur->next;
+            do {
+                std::cout << cur->key << std::endl;
+                cur->print_children();
+                cur = cur->next;
+            } while (cur != head);
 		}
-		while (cur && cur != head) {
-			std::cout << '\n';
-			std::cout << cur->key << std::endl;
-			cur->print_children();
-			cur = cur->next;
-		}
-		// for (auto i : grados) {
-		// 	if (i) {
-		// 		std::cout << i->key << "\n";
-		// 		i->print_children();
-		// 	}
-		// }
+//			std::cout << cur->key << std::endl;
+//			cur->print_children();
+//			cur = cur->next;
+//		}
+//		while (cur && cur != head) {
+//			std::cout << '\n';
+//			std::cout << cur->key << std::endl;
+//			cur->print_children();
+//			cur = cur->next;
+//		}
 	}
 
 	void buildFromInput() {

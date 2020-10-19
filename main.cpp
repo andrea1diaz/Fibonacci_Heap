@@ -5,10 +5,14 @@
 int main () {
 	FibonacciHeap<int> bh;
 
-	bh.insert(1);
-	bh.insert(2);
-	bh.insert(3);
-	bh.insert(5);
+	for (int i = 1; i <= 10; ++i) {
+	    bh.insert(i);
+	}
+
+//	bh.insert(1);
+//	bh.insert(2);
+//	bh.insert(3);
+//	bh.insert(5);
 
 	bh.print_heap();
 	bh.extract_min();

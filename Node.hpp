@@ -45,17 +45,28 @@ public:
 
 	void print_children () {
 		std::cout << "|--> ";
-		for (auto i : children) {
-			if (i) {
-				std::cout << i->key << " ";
-				
-			if (i->children.size() > 0)
-				i->print_children();	
-			}
+		if (head) {
+		    print_children_aux(head, 1);
 		}
 		std::cout << "\n";
 	}
 
+private:
+    void print_children_aux(Node<T>* node, int depth) {
+	    auto current = node;
+	    std::cout << std::endl;
+	    do {
+	        for (int i = 0; i < depth; ++i) {
+                std::cout << "     ";
+            }
+	        std::cout << current->key << "|--> ";
+	        if (current->head) {
+                print_children_aux(current->head, depth + 1);
+	        }
+            std::cout << std::endl;
+	        current = current->next;
+	    } while (current != node);
+	}
 
 };
 
