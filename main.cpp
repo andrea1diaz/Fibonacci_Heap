@@ -9,11 +9,9 @@ int main () {
 	    bh.insert(i);
 	}
 
-//	bh.insert(1);
-//	bh.insert(2);
-//	bh.insert(3);
-//	bh.insert(5);
-
+	bh.print_heap();
+	bh.extract_min();
+	std::cout << "====" << std::endl;
 	bh.print_heap();
 	bh.extract_min();
 	std::cout << "====" << std::endl;

@@ -125,12 +125,6 @@ public:
 	T extract_min() {
 		meld(min);
 		T value = min->key;
-		if (min == head) {
-		    head = min->next;
-		}
-		if (min == tail) {
-		    tail = min->prev;
-		}
 
 		delete min;
 		min = new_min();
@@ -152,6 +146,12 @@ public:
 	void meld(Node<T> *node) {
         node->prev->next = node->next;
         node->next->prev = node->prev;
+        if (node == head) {
+            head = min->next;
+        }
+        if (node == tail) {
+            tail = min->prev;
+        }
 
 		if(!node->head) {
 		    return;
