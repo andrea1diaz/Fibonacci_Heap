@@ -44,3 +44,6 @@
 CMakeLists.txt
 cmake-build-debug/
 .idea/
+
+# python
+bin/
