@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Node.hpp"
+#include "Lector.hpp"
 
 template <class T>
 class FibonacciHeap {
@@ -123,6 +124,7 @@ public:
     }
 
 	T extract_min() {
+		// Retornar el nodo (Kruskal)
 		meld(min);
 		T value = min->key;
 
@@ -228,16 +230,6 @@ public:
 				// nada
 			}
 		}
-
-        /*Node<T> *current = node;
-        T tmp;
-        while(current->parent && current->parent->key > current->key) {
-            tmp = current->parent->key;
-            current->parent->key = current->key;
-            current->key = tmp;
-            current = current->parent;
-        }*/
-		
     }
 
 	void print_heap () {
@@ -249,21 +241,26 @@ public:
                 cur = cur->next;
             } while (cur != head);
 		}
-//			std::cout << cur->key << std::endl;
-//			cur->print_children();
-//			cur = cur->next;
-//		}
-//		while (cur && cur != head) {
-//			std::cout << '\n';
-//			std::cout << cur->key << std::endl;
-//			cur->print_children();
-//			cur = cur->next;
-//		}
 	}
 
+private:
+	// A y B deben tener el mismo tamaño
+	double distance(vector<float> a, vector<float> b) {
+		double dist = 0;
+		for (int i = 0; i < a.size(); ++i) {
+			dist += pow(a[i] - b[i], 2);
+		}
+
+		return sqrt(dist);
+	}
+
+public:
 	void buildFromInput() {
-        T n;
-        while(std::cin >> n) insert(n);
+		auto answer = lector.Vectorizar(); 
+		// Answer tiene todos los vectores caracteristicos
+		// armar el heap con las aristas?
+		// las aristas serian las distancias entre cada nodo (usar la funcion distance())
+		// las coordenadas estan guardadas en answer
     }
 
 private:

@@ -9,12 +9,13 @@ int main () {
 	    bh.insert(i);
 	}
 
-	bh.print_heap();
-	bh.extract_min();
-	std::cout << "====" << std::endl;
-	bh.print_heap();
-	bh.extract_min();
-	std::cout << "====" << std::endl;
-	bh.print_heap();
+	// bh.print_heap();
+	// bh.extract_min();
+	// std::cout << "====" << std::endl;
+	// bh.print_heap();
+	// bh.extract_min();
+	// std::cout << "====" << std::endl;
+	// bh.print_heap();
+	bh.buildFromInput();
 	return 0;
 }

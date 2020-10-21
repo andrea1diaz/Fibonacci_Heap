@@ -3,27 +3,36 @@
 
 #define cimg_use_jpeg 1
 #include "CImg.h"
+#include <iostream>
+#include <fstream>
+#include <vector>
 
-namespace fs = std::__fs::filesystem;
+using namespace cimg_library;
+using namespace std;
 
 struct Lector {
-    Lector();
 
-    vector<vector<float>>  Vectorizar(CImg<float>& img) {
-        std::string path("faces94");
-        std::string ext(".jpg");
-        for (auto &p : fs::recursive_directory_iterator(path)) {
-            if (p.path().extension() == ext)
-                std::cout << p.path().stem().string() << '\n';
+    vector<vector<float>> Vectorizar() {
+        ifstream input ("list.txt");
+        vector<vector<float>> Rs;
+        string file;
+        
+        while(getline(input, file)) {
+            CImg<float> A(file.c_str());
+            A.haar(false, 1);
+            A.crop(0,0,89,99);
+            // CImg<float> B = A.haar(false,1);
+            // CImg<float> C = B.crop(0,0,89,99);
+            vector<float> R;
+            cimg_forXY(A,x,y) { 
+                R.push_back( (A(x,y,0) + A(x,y,1) +  A(x,y,2))/3);
+            }
+            Rs.push_back(R);
         }
-        // vector<float> R;
-        // cimg_forXY(img,x,y) 
-        // { 
-        //     R.push_back( (img(x,y,0) + img(x,y,1) +  img(x,y,2))/3);
-        // }
-        // return R;
+
+        return Rs;
     }
 
-};
+} lector;
 
 #endif
