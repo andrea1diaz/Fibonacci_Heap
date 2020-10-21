@@ -4,6 +4,7 @@
 #define cimg_use_jpeg 1
 #include "CImg.h"
 #include <iostream>
+#include <utility>
 #include <fstream>
 #include <vector>
 
@@ -12,9 +13,9 @@ using namespace std;
 
 struct Lector {
 
-    vector<vector<float>> Vectorizar() {
+    vector< pair<vector<float>, CImg<float>> > Vectorizar() {
         ifstream input ("list.txt");
-        vector<vector<float>> Rs;
+        vector< pair<vector<float>, CImg<float>> > Rs;
         string file;
         
         while(getline(input, file)) {
@@ -27,7 +28,7 @@ struct Lector {
             cimg_forXY(A,x,y) { 
                 R.push_back( (A(x,y,0) + A(x,y,1) +  A(x,y,2))/3);
             }
-            Rs.push_back(R);
+            Rs.push_back( {R, A} );
         }
 
         return Rs;

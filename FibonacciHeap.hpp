@@ -257,7 +257,7 @@ private:
 public:
 	void buildFromInput() {
 		auto answer = lector.Vectorizar(); 
-		// Answer tiene todos los vectores caracteristicos
+		// Answer tiene todos los vectores caracteristicos y las imagenes correspondientes
 		// armar el heap con las aristas?
 		// las aristas serian las distancias entre cada nodo (usar la funcion distance())
 		// las coordenadas estan guardadas en answer

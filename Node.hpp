@@ -1,8 +1,13 @@
 #ifndef NODE_H
 #define NODE_H
 
+#define cimg_use_jpeg 1
+#include "CImg.h"
 #include <iostream>
+#include <utility>
 #include <list>
+
+using namespace cimg_library;
 
 template <class T>
 class Node {
@@ -15,6 +20,9 @@ public:
 	Node<T> *prev = nullptr;
 	Node<T> *head = nullptr;
 	Node<T> *tail = nullptr;
+	// Como el nodo representa la arista, se debe guardar las imagenes y sus coordenadas
+	std::pair<CImg<float>, CImg<float>> imagenes;
+	std::pair<std::vector<float>, std::vector<float>> coordenadas;
 	bool isBlack = false;
 
 	Node();
