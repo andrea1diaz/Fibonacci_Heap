@@ -5,17 +5,21 @@
 int main () {
 	FibonacciHeap<int> bh;
 
-	for (int i = 1; i <= 10; ++i) {
-	    bh.insert(i);
-	}
+	// TODO: Revisar que este bien
+    // for (int i = 1; i <= 100; ++i) {
+    //     bh.insert(i);
+    // }
+	// bh.extract_min();
+	// bh.extract_min();
+    // bh.extract_min();
+    // bh.extract_min();
+    // bh.extract_min();
+    // bh.extract_min();
+    // bh.extract_min();
+	// bh.print_heap();
+	// End test
 
-	// bh.print_heap();
-	// bh.extract_min();
-	// std::cout << "====" << std::endl;
-	// bh.print_heap();
-	// bh.extract_min();
-	// std::cout << "====" << std::endl;
-	// bh.print_heap();
+	// Lectura de imagenes
 	bh.buildFromInput();
 	return 0;
 }
