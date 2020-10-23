@@ -8,6 +8,7 @@
 
 #include "Node.hpp"
 #include "Lector.hpp"
+#include "CImg.h"
 
 template <class T>
 class FibonacciHeap {
@@ -15,6 +16,8 @@ private:
 	int size;
 	std::vector<Node<T> *> grados;
 	std::list<Node<T> *> roots;
+	std::vector<std::pair<std::vector<T>, CImg<T>> > images;
+	std::vector<std::vector<T> > distances;
 	Node<T> *min;
 	Node<T> *head;
 	Node<T> *tail;
@@ -27,7 +30,7 @@ public:
 		size = 0;
 	}
 
-	void insert (T key) {
+	Node<T>* insert (T key) {
 		Node<T>* cur = new Node<T> (key);
 		if (size == 0) {
 			min = cur;
@@ -50,6 +53,7 @@ public:
 			}
 		}
 		size ++;
+		return cur;
 	}
 
 private:
@@ -246,10 +250,10 @@ public:
 
 private:
 	// A y B deben tener el mismo tamaño
-	double distance(std::vector<float> a, std::vector<float> b) {
-		double dist = 0;
+	T distance(std::vector<T> a, std::vector<T> b) {
+		T dist = 0;
 		for (int i = 0; i < a.size(); ++i) {
-			dist += pow(a[i] - b[i], 2);
+			dist += (a[i] - b[i]) * (a[i] - b[i]);
 		}
 
 		return sqrt(dist);
@@ -257,7 +261,23 @@ private:
 
 public:
 	void buildFromInput() {
-		auto answer = lector.Vectorizar();
+		images = lector.Vectorizar();
+		// first es el vector caracteristico y second la imagen
+		std::vector<std::vector<T> > distances
+		for(int i = 0; i < images.size(); ++i) {
+			for(int j = 0; j < images.size(); ++j) {
+				if(i == j) {
+					distances[i][j] = 0;
+					continue;
+				}
+				else if(distances[i][j])
+					continue;
+				distance[i][j] = distance(images[i].first, images[j].first);
+				Node<T>* cur = insert(distance[i][j]);
+				cur->coordenadas = {images[i].first, images[j].first};
+				cur->imagenes = {images[i].second, images[j].second};
+			}
+		}
 		// Answer tiene todos los vectores caracteristicos y las imagenes correspondientes
 		// armar el heap con las aristas?
 		// las aristas serian las distancias entre cada nodo (usar la funcion distance())
