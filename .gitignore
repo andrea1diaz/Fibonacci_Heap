@@ -47,3 +47,8 @@ cmake-build-debug/
 
 # python
 bin/
+
+# lldb
+*.dSYM/
+
+.DS_Store

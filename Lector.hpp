@@ -14,7 +14,7 @@ using namespace std;
 struct Lector {
 
     vector< pair<vector<float>, CImg<float>> > Vectorizar() {
-        ifstream input ("list.txt");
+        ifstream input ("list100.txt");
         vector< pair<vector<float>, CImg<float>> > Rs;
         string file;
         

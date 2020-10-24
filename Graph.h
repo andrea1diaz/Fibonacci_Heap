@@ -14,13 +14,14 @@
 struct Graph {
     private:
         std::vector<std::pair<std::vector<float>, CImg<float> > > nodes;
-        std::vector<std::vector<float> > edges;
+        std::vector<std::vector<float>> edges;
         FibonacciHeap<float> fh;
         UnionFind u;
         
     public:
-        Graph() {
+        Graph() : u{0} {
             nodes = lector.Vectorizar();
+			edges = std::vector<std::vector<float>>(nodes.size(), std::vector<float>(nodes.size()));;
             for(int i = 0; i < nodes.size(); ++i) {
                 for(int j = 0; j < nodes.size(); ++j) {
                     if(i == j) {
@@ -44,10 +45,10 @@ struct Graph {
             std::set<Node<float>*> F;
             while(!fh.empty()) {
                 Node<float>* cur = fh.extract_min();
-                int u{cur->uv.first}, v{cur->uv.second};
-                if(findSet(u) != findSet(v)) {
+                int i{cur->uv.first}, j{cur->uv.second};
+                if(u.findSet(i) != u.findSet(j)) {
                     F.insert(cur);
-                    unionSet(findSet(u), findSet(v));
+                    u.unionSet(u.findSet(i), u.findSet(j));
                 }
             }
             return F;

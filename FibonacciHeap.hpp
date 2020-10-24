@@ -251,7 +251,6 @@ public:
 		}
 	}
 
-private:
 	// A y B deben tener el mismo tamaño
 	T distance(std::vector<T> a, std::vector<T> b) {
 		T dist = 0;
