@@ -7,15 +7,16 @@
 #include <utility>
 #include <fstream>
 #include <vector>
+#include <tuple>
 
 using namespace cimg_library;
 using namespace std;
 
 struct Lector {
 
-    vector< pair<vector<float>, CImg<float>> > Vectorizar() {
+    vector< tuple<vector<float>, CImg<float>>, std::string > Vectorizar() {
         ifstream input ("list100.txt");
-        vector< pair<vector<float>, CImg<float>> > Rs;
+        vector< tuple<vector<float>, CImg<float>, std::string> > Rs;
         string file;
         
         while(getline(input, file)) {
@@ -28,7 +29,7 @@ struct Lector {
             cimg_forXY(A,x,y) { 
                 R.push_back( (A(x,y,0) + A(x,y,1) +  A(x,y,2))/3);
             }
-            Rs.push_back( {R, A} );
+            Rs.push_back( {R, A, file} );
         }
         return Rs;
     }

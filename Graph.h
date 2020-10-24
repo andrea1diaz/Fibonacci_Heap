@@ -4,6 +4,7 @@
 #include <vector>
 #include <utility>
 #include <set>
+#include <tuple>
 
 #include "Lector.hpp"
 #include "FibonacciHeap.hpp"
@@ -13,7 +14,7 @@
 
 struct Graph {
     private:
-        std::vector<std::pair<std::vector<float>, CImg<float> > > nodes;
+        std::vector<std::tuple<std::vector<float>, CImg<float>, std::string > > nodes;
         std::vector<std::vector<float>> edges;
         FibonacciHeap<float> fh;
         UnionFind u;
@@ -54,7 +55,26 @@ struct Graph {
             return F;
         }
 
-        
+        void drawMST() {
+            auto mst = Kruskal();
+            std::ofstream file("grafo.vz");
+            file << "digraph\n{" << std::endl;
+            file << "graph [compound=true, labelloc="b", layout=neato];" << std::endl;
+            file << "node [shape=none];" << std::endl;
+            file << "edge [dir=none];" << std::endl;
+
+            for(int i = 0; i < nodes.size(); ++i) {
+                file << i << " [label=\"\", image=\"" << std::get<2>(nodes[i]) << "\", height=0.1, width=0.1" << std::endl;
+            }
+
+            for(auto e : mst) {
+                file << e.uv.first << "->" e.uv.second << "[len=" << e.key << "]" << std::endl;
+            }
+
+            file << "}" << std::endl;
+            file.close();
+            system("dot -Tpdf grafo.vz -o grafo.pdf");
+        }
 };
 
 #endif
