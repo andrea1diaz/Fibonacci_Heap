@@ -65,7 +65,7 @@ struct Graph {
             file << "edge [dir=none];" << std::endl;
 
             for(int i = 0; i < nodes.size(); ++i) {
-                file << i << " [label=\"\", image=\"" << std::get<2>(nodes[i]) << "\", height=0.1, width=0.1" << std::endl;
+                file << i << " [label=\"\", image=\"" << std::get<2>(nodes[i]) << "\", height=0.1, width=0.1]" << std::endl;
             }
 
             for(auto e : mst) {
