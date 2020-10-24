@@ -61,9 +61,11 @@ public:
 	void compact_tree() {
 		grados = std::vector<Node<T> *> (size, nullptr);
 		Node<T>* cur = head;
-
-		do {
+		bool q = 0;
+		while(1){
 			Node<T> *next = cur->next;
+			if(cur == tail)
+				q = true;
 			if(grados[cur->grado]) {
 
 				while(grados[cur->grado]) {
@@ -77,9 +79,9 @@ public:
 			}
 
 			cur = next;
-
-
-		} while(cur != head);
+			if(q)
+				break;
+		}
 
 	}
 
@@ -136,13 +138,15 @@ public:
 
 	Node<T>* extract_min() {
 		// Retornar el nodo (Kruskal)
+		std::cout << "entra" << std::endl;
 		meld(min);
 		Node<T>* cur = min;
 
 		min = new_min();
-	
+		std::cout << "hiiizo meld" << std::endl;
+		print_heap();
 		compact_tree();
-
+		std::cout << "hizo commpact" << std::endl;
 		size--;
 
 		return cur;
@@ -161,26 +165,47 @@ public:
 	}
 
 	void meld(Node<T> *node) {
-        node->prev->next = node->next;
-        node->next->prev = node->prev;
-        if (node == head) {
-            head = min->next;
-        }
-        if (node == tail) {
-            tail = min->prev;
-        }
-
 		if(!node->head) {
+			if(head == tail) {
+				head = nullptr;
+				tail = nullptr;
+				return;
+			}
+			node->prev->next = node->next;
+			node->next->prev = node->prev;
+			if (node == head) {
+				head = node->next;
+			}
+			else if (node == tail) {
+				tail = node->prev;
+			}
 		    return;
 		}
-
+		Node<T>* cur = node->head;
+		do {
+			cur->parent = nullptr;
+			cur = cur->next;
+		} while(cur != node->head);
+		if(head == tail) {
+			head = node->head;
+			tail = node->tail;
+		}
 		else {
-            tail->next = node->head;
-            node->head->prev = tail;
-            node->tail->next = head;
-            head->prev = node->tail;
-            tail = node->tail;
-        }
+			if (node == head) {
+				head = node->next;
+			}
+			else if (node == tail) {
+				tail = node->prev;
+			}
+			node->prev->next = node->next;
+			node->next->prev = node->prev;
+			
+			tail->next = node->head;
+			node->head->prev = tail;
+			node->tail->next = head;
+			head->prev = node->tail;
+			tail = node->tail;
+		}
 	}
 	
 	void decrease_key(Node<T> *node, T new_key) {

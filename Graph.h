@@ -5,6 +5,7 @@
 #include <utility>
 #include <set>
 #include <tuple>
+#include    <iostream>
 
 #include "Lector.hpp"
 #include "FibonacciHeap.hpp"
@@ -43,9 +44,14 @@ struct Graph {
         }
 
         std::set<Node<float>*> Kruskal() {
+
+            std::cout << "innnitial" << std::endl;
+            fh.print_heap();
             std::set<Node<float>*> F;
             while(!fh.empty()) {
                 Node<float>* cur = fh.extract_min();
+                std::cout << "min extrrrrracted: " << cur->key << std::endl;
+                fh.print_heap();
                 int i{cur->uv.first}, j{cur->uv.second};
                 if(u.findSet(i) != u.findSet(j)) {
                     F.insert(cur);
@@ -69,7 +75,7 @@ struct Graph {
             }
 
             for(auto e : mst) {
-                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key << "]" << std::endl;
+                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key/100 << "]" << std::endl;
             }
 
             file << "}" << std::endl;
