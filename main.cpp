@@ -21,5 +21,6 @@ int main () {
 	// // Lectura de imagenes
 	// bh.buildFromInput();
 	Graph* g = new Graph();
+	g->drawMST();
 	return 0;
 }
