@@ -59,7 +59,7 @@ struct Graph {
             auto mst = Kruskal();
             std::ofstream file("grafo.vz");
             file << "digraph\n{" << std::endl;
-            file << "graph [compound=true, labelloc="b", layout=neato];" << std::endl;
+            file << "graph [compound=true, labelloc=\"b\", layout=neato];" << std::endl;
             file << "node [shape=none];" << std::endl;
             file << "edge [dir=none];" << std::endl;
 
@@ -68,7 +68,7 @@ struct Graph {
             }
 
             for(auto e : mst) {
-                file << e.uv.first << "->" e.uv.second << "[len=" << e.key << "]" << std::endl;
+                file << e->uv.first << "->" e->uv.second << "[len=" << e->key << "]" << std::endl;
             }
 
             file << "}" << std::endl;
