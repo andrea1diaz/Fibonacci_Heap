@@ -57,6 +57,7 @@ public:
 		return cur;
 	}
 
+int count = 0;
 public:
 
 	void compact_tree() {
@@ -95,7 +96,7 @@ public:
 
 			if(second_node == head) {
 				head = first_node;
-				if (grados.size() >= 0) {
+				if (head == tail) {
 					tail = first_node->next;
 				}
 
@@ -111,24 +112,41 @@ public:
 			}
 
 			first_node->grado++;
-
 			return first_node;
 		}
 		else {
+	std::cout << "size "  << size << '\n' << "head " << head->key << " tail " << tail->key << " second " << min->key << '\n';
+			print_heap();
+
+
 			first_node->parent = second_node;
 			first_node->prev->next = first_node->next;
 			first_node->next->prev = first_node->prev;
 
 			if(first_node == head) {
 				head = second_node;
-
-				if (grados.size() >= 0) {
+				
+				std::cout << "-----> first_node " << first_node->next->key << '\n'; 
+				if (head == tail ) {
 					tail = second_node->next;
+				}
+
+				else if (first_node->next != second_node) {
+
+					tail->next = first_node->next;
+					first_node->next = head;
+					head->prev = first_node->next;
+
+					tail = first_node->next;
+	std::cout << "----------> after size "  << size << '\n' << "head " << head->key << " tail " << tail->key << " first " << first_node-> key  << " second " << second_node->key << '\n';
+print_heap();
+
+
+
 				}
 			}
 			if(first_node == tail) {
 				tail = second_node;
-
 			}
 			if(!second_node->head) {
 				second_node->init_children(first_node);
@@ -137,6 +155,7 @@ public:
 				second_node->add_child(first_node);
 			}
 			second_node->grado++;
+
 
             return second_node;
 		}
@@ -151,13 +170,12 @@ public:
 		// Retornar el nodo (Kruskal)
 		if (size > 1) {
 			meld(min);
-			size--;
 			Node<T>* cur = min;
 
 
 			min = new_min();
 
-
+			size--;
 			if (tail != head) compact_tree();
 
 			return cur;

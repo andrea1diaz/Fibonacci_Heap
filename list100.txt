@@ -3,3 +3,8 @@ faces94/malestaff/tony/tony.7.jpg
 faces94/malestaff/tony/tony.6.jpg
 faces94/malestaff/tony/tony.16.jpg
 faces94/malestaff/tony/tony.14.jpg
+faces94/malestaff/tony/tony.4.jpg
+faces94/malestaff/tony/tony.5.jpg
+faces94/malestaff/tony/tony.15.jpg
+faces94/malestaff/tony/tony.11.jpg
+faces94/malestaff/tony/tony.1.jpg
