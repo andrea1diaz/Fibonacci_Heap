@@ -106,7 +106,11 @@ public:
 		Node<T>* cur = head;
 		do {
 			if(grados[cur->grado]) {
-				cur = unite(grados[cur->grado], cur);
+				while(grados[cur->grado]) {
+					cur = unite(grados[cur->grado], cur);
+					grados[cur->grado - 1] = nullptr;
+				}
+				grados[cur->grado] = cur;
 			}
 			else {
 				grados[cur->grado] = cur;
