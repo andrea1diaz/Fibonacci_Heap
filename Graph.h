@@ -68,7 +68,7 @@ struct Graph {
             }
 
             for(auto e : mst) {
-                file << e->uv.first << "->" e->uv.second << "[len=" << e->key << "]" << std::endl;
+                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key << "]" << std::endl;
             }
 
             file << "}" << std::endl;

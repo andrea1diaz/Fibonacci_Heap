@@ -14,7 +14,7 @@ using namespace std;
 
 struct Lector {
 
-    vector< tuple<vector<float>, CImg<float>>, std::string > Vectorizar() {
+    vector< tuple<vector<float>, CImg<float>, std::string> > Vectorizar() {
         ifstream input ("list100.txt");
         vector< tuple<vector<float>, CImg<float>, std::string> > Rs;
         string file;
