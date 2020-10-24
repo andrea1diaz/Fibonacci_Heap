@@ -116,7 +116,7 @@ public:
 				grados[cur->grado] = cur;
 			}
 			cur = cur->next;
-		} while(current != head);
+		} while(cur != head);
 	}
 
 
