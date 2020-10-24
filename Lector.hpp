@@ -30,7 +30,6 @@ struct Lector {
             }
             Rs.push_back( {R, A} );
         }
-
         return Rs;
     }
 

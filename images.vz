@@ -1,0 +1,13 @@
+digraph {
+    graph [compound=true, labelloc="b", layout=neato];
+    node [shape=none];
+    edge [dir=none];
+
+    a [label="", image="faces94/malestaff/tony/tony.17.jpg", height=0.1, width=0.1];
+    b [label="", image="faces94/malestaff/tony/tony.7.jpg",height=0.1, width=0.1];
+    c [label="", image="faces94/malestaff/tony/tony.6.jpg",height=0.1, width=0.1];
+
+    a->b[len=10];
+    b->c[len=4];
+    a->c[len=9];
+}
