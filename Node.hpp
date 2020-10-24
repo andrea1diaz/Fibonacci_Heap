@@ -23,6 +23,7 @@ public:
 	// Como el nodo representa la arista, se debe guardar las imagenes y sus coordenadas
 	std::pair<CImg<float>, CImg<float>> imagenes;
 	std::pair<std::vector<float>, std::vector<float>> coordenadas;
+	std::pair<int, int> uv; // indice del nodo u y nodo v que estan conectados dentro del grafo
 	bool isBlack = false;
 
 	Node();

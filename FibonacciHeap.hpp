@@ -16,8 +16,6 @@ private:
 	int size;
 	std::vector<Node<T> *> grados;
 	std::list<Node<T> *> roots;
-	std::vector<std::pair<std::vector<T>, CImg<T>> > images;
-	std::vector<std::vector<T> > distances;
 	Node<T> *min;
 	Node<T> *head;
 	Node<T> *tail;
@@ -28,6 +26,10 @@ private:
 public:
 	FibonacciHeap() {
 		size = 0;
+	}
+
+	bool empty() {
+		return size == 0;
 	}
 
 	Node<T>* insert (T key) {
@@ -128,17 +130,18 @@ public:
         return min;
     }
 
-	T extract_min() {
+	Node<T>* extract_min() {
 		// Retornar el nodo (Kruskal)
 		meld(min);
-		T value = min->key;
+		Node<T>* cur = min;
 
-		delete min;
 		min = new_min();
-
+	
 		compact_tree();
-		return value;
+		return cur;
     }
+
+	
 
 	Node<T>* new_min() {
 		Node<T>* current = head;
@@ -260,29 +263,30 @@ private:
 	}
 
 public:
-	void buildFromInput() {
-		images = lector.Vectorizar();
-		// first es el vector caracteristico y second la imagen
-		std::vector<std::vector<T> > distances
-		for(int i = 0; i < images.size(); ++i) {
-			for(int j = 0; j < images.size(); ++j) {
-				if(i == j) {
-					distances[i][j] = 0;
-					continue;
-				}
-				else if(distances[i][j])
-					continue;
-				distance[i][j] = distance(images[i].first, images[j].first);
-				Node<T>* cur = insert(distance[i][j]);
-				cur->coordenadas = {images[i].first, images[j].first};
-				cur->imagenes = {images[i].second, images[j].second};
-			}
-		}
-		// Answer tiene todos los vectores caracteristicos y las imagenes correspondientes
-		// armar el heap con las aristas?
-		// las aristas serian las distancias entre cada nodo (usar la funcion distance())
-		// las coordenadas estan guardadas en answer
-    }
+	// void buildFromInput() {
+	// 	images = lector.Vectorizar();
+	// 	// first es el vector caracteristico y second la imagen
+	// 	std::vector<std::vector<T> > distances
+	// 	for(int i = 0; i < images.size(); ++i) {
+	// 		for(int j = 0; j < images.size(); ++j) {
+	// 			if(i == j) {
+	// 				distances[i][j] = 0;
+	// 				continue;
+	// 			}
+	// 			else if(distances[i][j])
+	// 				continue;
+	// 			distance[i][j] = distance(images[i].first, images[j].first);
+	// 			Node<T>* cur = insert(distance[i][j]);
+	// 			cur->coordenadas = {images[i].first, images[j].first};
+	// 			cur->imagenes = {images[i].second, images[j].second};
+	// 		}
+	// 	}
+	// 	// Answer tiene todos los vectores caracteristicos y las imagenes correspondientes
+	// 	// armar el heap con las aristas?
+	// 	// las aristas serian las distancias entre cada nodo (usar la funcion distance())
+	// 	// las coordenadas estan guardadas en answer
+    // }
+
 
 private:
 
