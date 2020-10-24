@@ -8,8 +8,8 @@ edge [dir=none];
 2 [label="", image="faces94/malestaff/tony/tony.6.jpg", height=0.1, width=0.1]
 3 [label="", image="faces94/malestaff/tony/tony.16.jpg", height=0.1, width=0.1]
 4 [label="", image="faces94/malestaff/tony/tony.14.jpg", height=0.1, width=0.1]
-0->2[len=78.8551]
-0->3[len=22.3803]
-1->3[len=60.9739]
-2->4[len=78.2972]
+0->2[len=78.8733]
+0->3[len=22.4096]
+1->3[len=60.9653]
+2->4[len=78.2975]
 }

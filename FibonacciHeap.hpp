@@ -53,6 +53,7 @@ public:
 			}
 		}
 		size ++;
+	
 		return cur;
 	}
 
@@ -87,7 +88,6 @@ public:
 
 
 	Node<T>* unite (Node<T> *first_node, Node<T> *second_node) {
-		
 		if(first_node->key < second_node->key) {
 			second_node->parent = first_node;
 			second_node->prev->next = second_node->next;
@@ -95,6 +95,10 @@ public:
 
 			if(second_node == head) {
 				head = first_node;
+				if (grados.size() >= 0) {
+					tail = first_node->next;
+				}
+
 			}
 			if(second_node == tail) {
 				tail = first_node;
@@ -111,15 +115,20 @@ public:
 			return first_node;
 		}
 		else {
-
 			first_node->parent = second_node;
 			first_node->prev->next = first_node->next;
 			first_node->next->prev = first_node->prev;
+
 			if(first_node == head) {
 				head = second_node;
+
+				if (grados.size() >= 0) {
+					tail = second_node->next;
+				}
 			}
 			if(first_node == tail) {
 				tail = second_node;
+
 			}
 			if(!second_node->head) {
 				second_node->init_children(first_node);
@@ -128,8 +137,10 @@ public:
 				second_node->add_child(first_node);
 			}
 			second_node->grado++;
+
             return second_node;
 		}
+
 	}
 
 	Node<T>* get_min () {
@@ -138,30 +149,37 @@ public:
 
 	Node<T>* extract_min() {
 		// Retornar el nodo (Kruskal)
-		std::cout << "entra" << std::endl;
-		meld(min);
-		Node<T>* cur = min;
+		if (size > 1) {
+			meld(min);
+			size--;
+			Node<T>* cur = min;
 
-		min = new_min();
-		std::cout << "hiiizo meld" << std::endl;
-		print_heap();
-		compact_tree();
-		std::cout << "hizo commpact" << std::endl;
-		size--;
 
-		return cur;
-    }
+			min = new_min();
+
+
+			if (tail != head) compact_tree();
+
+			return cur;
+		}
+	
+		size --;
+		return head;
+	}
 
 	
 
 	Node<T>* new_min() {
 		Node<T>* current = head;
-		Node<T>* min = current;
+		Node<T>* n_min = current;
 		do {
-			if (current->key < min->key) min = current;
-			current = current->next;
+			Node<T> * next_ = current->next;
+			if (current->key < n_min->key) n_min = current;
+
+			current = next_;
 		} while(current != head);
-		return min;
+
+		return n_min;
 	}
 
 	void meld(Node<T> *node) {
@@ -171,20 +189,24 @@ public:
 				tail = nullptr;
 				return;
 			}
+
 			node->prev->next = node->next;
 			node->next->prev = node->prev;
+
 			if (node == head) {
 				head = node->next;
 			}
 			else if (node == tail) {
 				tail = node->prev;
+
 			}
 		    return;
 		}
 		Node<T>* cur = node->head;
 		do {
+			Node<T>* next_ = cur->next;	
 			cur->parent = nullptr;
-			cur = cur->next;
+			cur = next_;
 		} while(cur != node->head);
 		if(head == tail) {
 			head = node->head;
@@ -204,6 +226,7 @@ public:
 			node->head->prev = tail;
 			node->tail->next = head;
 			head->prev = node->tail;
+			
 			tail = node->tail;
 		}
 	}
