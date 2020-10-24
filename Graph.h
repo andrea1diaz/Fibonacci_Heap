@@ -31,11 +31,11 @@ struct Graph {
                     }
                     else if(edges[i][j])
                         continue;
-                    edges[i][j] = fh.distance(nodes[i].first, nodes[j].first);
+                    edges[i][j] = fh.distance(std::get<0>(nodes[i]), std::get<0>(nodes[j]));
                     edges[j][i] = edges[i][j];
                     Node<float>* cur = fh.insert(edges[i][j]);
-                    cur->coordenadas = {nodes[i].first, nodes[j].first};
-                    cur->imagenes = {nodes[i].second, nodes[j].second};
+                    cur->coordenadas = {std::get<0>(nodes[i]), std::get<0>(nodes[j])};
+                    cur->imagenes = {std::get<1>(nodes[i]), std::get<1>(nodes[j])};
                     cur->uv = {i, j};
                 }
             }
