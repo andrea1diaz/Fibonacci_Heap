@@ -125,6 +125,12 @@ public:
 			second_node->parent = first_node;
 			second_node->prev->next = second_node->next;
 			second_node->next->prev = second_node->prev;
+			if(second_node == head) {
+				head = first_node;
+			}
+			if(second_node == tail) {
+				tail = first_node;
+			}
 			if(!first_node->head) {
 				first_node->init_children(second_node);
 			}
@@ -138,6 +144,12 @@ public:
 			first_node->parent = second_node;
 			first_node->prev->next = first_node->next;
 			first_node->next->prev = first_node->prev;
+			if(first_node == head) {
+				head = second_node;
+			}
+			if(first_node == tail) {
+				tail = second_node;
+			}
 			if(!second_node->head) {
 				second_node->init_children(first_node);
 			}
