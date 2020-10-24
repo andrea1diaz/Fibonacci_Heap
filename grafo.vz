@@ -1,0 +1,9 @@
+digraph
+{
+graph [compound=true, labelloc="b", layout=neato];
+node [shape=none];
+edge [dir=none];
+0 [label="", image="faces94/malestaff/tony/tony.17.jpg", height=0.1, width=0.1
+1 [label="", image="faces94/malestaff/tony/tony.7.jpg", height=0.1, width=0.1
+0->1[len=6423.75]
+}

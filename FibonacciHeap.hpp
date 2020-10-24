@@ -37,10 +37,8 @@ public:
 		if (size == 0) {
 			min = cur;
 			tail = head = cur;
-			tail->prev = head;
-			tail->next = head;
-			head->prev = tail;
-			head->next = tail;
+			cur->prev = cur;
+			cur->next = cur;
 		}
 		else {
 			tail->next = cur;
@@ -58,54 +56,16 @@ public:
 		return cur;
 	}
 
-private:
-    // void compact_helper(Node<T>* node) {
-    //     if (node->key < grados[node->grado]->key) {
-    //         grados[node->grado]->next->prev = grados[node->grado]->prev;
-    //         grados[node->grado]->prev->next = grados[node->grado]->next;
-    //     } else {
-    //         node->next->prev = node->prev;
-    //         node->prev->next = node->next;
-    //     }
-    //     auto tmp = unite(node, grados[node->grado]);
-    //     if (tmp->tail == head) {
-    //         head = head_next;
-    //     }
-    //     if (tmp->tail == tail) {
-    //         tail = tail_prev;
-    //     }
-    //     grados[tmp->grado - 1] = nullptr;
-    //     if (grados[tmp->grado]) {
-    //         compact_helper(tmp);
-    //     } else {
-    //         grados[tmp->grado] = tmp;
-    //     }
-	// }
 public:
-
-	// void compact_tree () {
-	// 	grados = std::vector<Node<T> *>(size, nullptr);
-	// 	Node<T> *current = head;
-		
-	// 	do {
-	// 	    head_next = head->next;
-	// 	    tail_prev = tail->prev;
-	// 	    auto cur_next = current->next;
-	// 		if(grados[current->grado]) {
-	// 		    compact_helper(current);
-	// 		}
-	// 		else {
-	// 			grados[current->grado] = current;
-	// 		}
-	// 		current = cur_next;
-	// 	} while(current != head);
-	// }
 
 	void compact_tree() {
 		grados = std::vector<Node<T> *> (size, nullptr);
 		Node<T>* cur = head;
+
 		do {
+			Node<T> *next = cur->next;
 			if(grados[cur->grado]) {
+
 				while(grados[cur->grado]) {
 					cur = unite(grados[cur->grado], cur);
 					grados[cur->grado - 1] = nullptr;
@@ -115,16 +75,22 @@ public:
 			else {
 				grados[cur->grado] = cur;
 			}
-			cur = cur->next;
+
+			cur = next;
+
+
 		} while(cur != head);
+
 	}
 
 
 	Node<T>* unite (Node<T> *first_node, Node<T> *second_node) {
+		
 		if(first_node->key < second_node->key) {
 			second_node->parent = first_node;
 			second_node->prev->next = second_node->next;
 			second_node->next->prev = second_node->prev;
+
 			if(second_node == head) {
 				head = first_node;
 			}
@@ -137,10 +103,13 @@ public:
 			else {
 				first_node->add_child(second_node);
 			}
+
 			first_node->grado++;
+
 			return first_node;
 		}
 		else {
+
 			first_node->parent = second_node;
 			first_node->prev->next = first_node->next;
 			first_node->next->prev = first_node->prev;
@@ -173,6 +142,9 @@ public:
 		min = new_min();
 	
 		compact_tree();
+
+		size--;
+
 		return cur;
     }
 
@@ -295,32 +267,6 @@ public:
 
 		return sqrt(dist);
 	}
-
-public:
-	// void buildFromInput() {
-	// 	images = lector.Vectorizar();
-	// 	// first es el vector caracteristico y second la imagen
-	// 	std::vector<std::vector<T> > distances
-	// 	for(int i = 0; i < images.size(); ++i) {
-	// 		for(int j = 0; j < images.size(); ++j) {
-	// 			if(i == j) {
-	// 				distances[i][j] = 0;
-	// 				continue;
-	// 			}
-	// 			else if(distances[i][j])
-	// 				continue;
-	// 			distance[i][j] = distance(images[i].first, images[j].first);
-	// 			Node<T>* cur = insert(distance[i][j]);
-	// 			cur->coordenadas = {images[i].first, images[j].first};
-	// 			cur->imagenes = {images[i].second, images[j].second};
-	// 		}
-	// 	}
-	// 	// Answer tiene todos los vectores caracteristicos y las imagenes correspondientes
-	// 	// armar el heap con las aristas?
-	// 	// las aristas serian las distancias entre cada nodo (usar la funcion distance())
-	// 	// las coordenadas estan guardadas en answer
-    // }
-
 
 private:
 

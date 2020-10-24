@@ -52,6 +52,7 @@ struct Graph {
                     u.unionSet(u.findSet(i), u.findSet(j));
                 }
             }
+
             return F;
         }
 
