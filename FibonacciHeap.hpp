@@ -59,51 +59,68 @@ public:
 	}
 
 private:
-    void compact_helper(Node<T>* node) {
-        if (node->key < grados[node->grado]->key) {
-            grados[node->grado]->next->prev = grados[node->grado]->prev;
-            grados[node->grado]->prev->next = grados[node->grado]->next;
-        } else {
-            node->next->prev = node->prev;
-            node->prev->next = node->next;
-        }
-        auto tmp = unite(node, grados[node->grado]);
-        if (tmp->tail == head) {
-            head = head_next;
-        }
-        if (tmp->tail == tail) {
-            tail = tail_prev;
-        }
-        grados[tmp->grado - 1] = nullptr;
-        if (grados[tmp->grado]) {
-            compact_helper(tmp);
-        } else {
-            grados[tmp->grado] = tmp;
-        }
-	}
+    // void compact_helper(Node<T>* node) {
+    //     if (node->key < grados[node->grado]->key) {
+    //         grados[node->grado]->next->prev = grados[node->grado]->prev;
+    //         grados[node->grado]->prev->next = grados[node->grado]->next;
+    //     } else {
+    //         node->next->prev = node->prev;
+    //         node->prev->next = node->next;
+    //     }
+    //     auto tmp = unite(node, grados[node->grado]);
+    //     if (tmp->tail == head) {
+    //         head = head_next;
+    //     }
+    //     if (tmp->tail == tail) {
+    //         tail = tail_prev;
+    //     }
+    //     grados[tmp->grado - 1] = nullptr;
+    //     if (grados[tmp->grado]) {
+    //         compact_helper(tmp);
+    //     } else {
+    //         grados[tmp->grado] = tmp;
+    //     }
+	// }
 public:
 
-	void compact_tree () {
-		grados = std::vector<Node<T> *>(size, nullptr);
-		Node<T> *current = head;
+	// void compact_tree () {
+	// 	grados = std::vector<Node<T> *>(size, nullptr);
+	// 	Node<T> *current = head;
 		
+	// 	do {
+	// 	    head_next = head->next;
+	// 	    tail_prev = tail->prev;
+	// 	    auto cur_next = current->next;
+	// 		if(grados[current->grado]) {
+	// 		    compact_helper(current);
+	// 		}
+	// 		else {
+	// 			grados[current->grado] = current;
+	// 		}
+	// 		current = cur_next;
+	// 	} while(current != head);
+	// }
+
+	void compact_tree() {
+		grados = std::vector<Node<T> *> (size, nullptr);
+		Node<T>* cur = head;
 		do {
-		    head_next = head->next;
-		    tail_prev = tail->prev;
-		    auto cur_next = current->next;
-			if(grados[current->grado]) {
-			    compact_helper(current);
+			if(grados[cur->grado]) {
+				cur = unite(grados[cur->grado], cur);
 			}
 			else {
-				grados[current->grado] = current;
+				grados[cur->grado] = cur;
 			}
-			current = cur_next;
+			cur = cur->next;
 		} while(current != head);
 	}
+
 
 	Node<T>* unite (Node<T> *first_node, Node<T> *second_node) {
 		if(first_node->key < second_node->key) {
 			second_node->parent = first_node;
+			second_node->prev->next = second_node->next;
+			second_node->next->prev = second_node->prev;
 			if(!first_node->head) {
 				first_node->init_children(second_node);
 			}
@@ -115,6 +132,8 @@ public:
 		}
 		else {
 			first_node->parent = second_node;
+			first_node->prev->next = first_node->next;
+			first_node->next->prev = first_node->prev;
 			if(!second_node->head) {
 				second_node->init_children(first_node);
 			}
