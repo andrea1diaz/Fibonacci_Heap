@@ -55,8 +55,8 @@ struct Graph {
                 }
             }
             auto t2 = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::seconds> (t2 - t1).count();
-            std::cout << "Duration: " << duration << endl;
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds> (t2 - t1).count();
+            std::cout << "Duration: " << duration << " microseconds" << endl;
             return F;
         }
 
@@ -73,7 +73,7 @@ struct Graph {
             }
 
             for(auto e : mst) {
-                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key/100 << "]" << std::endl;
+                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key/1000 << "]" << std::endl;
             }
 
             file << "}" << std::endl;
