@@ -5,6 +5,7 @@
 #include <utility>
 #include <set>
 #include <tuple>
+#include <chrono>
 
 #include "Lector.hpp"
 #include "FibonacciHeap.hpp"
@@ -43,6 +44,7 @@ struct Graph {
         }
 
         std::set<Node<float>*> Kruskal() {
+            auto t1 = std::chrono::high_resolution_clock::now();
             std::set<Node<float>*> F;
             while(!fh.empty()) {
                 Node<float>* cur = fh.extract_min();
@@ -52,7 +54,9 @@ struct Graph {
                     u.unionSet(u.findSet(i), u.findSet(j));
                 }
             }
-
+            auto t2 = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds> (t2 - t1).count();
+            std::cout << "Duration: " << duration << endl;
             return F;
         }
 
@@ -69,7 +73,7 @@ struct Graph {
             }
 
             for(auto e : mst) {
-                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key << "]" << std::endl;
+                file << e->uv.first << "->" << e->uv.second << "[len=" << e->key/100 << "]" << std::endl;
             }
 
             file << "}" << std::endl;
