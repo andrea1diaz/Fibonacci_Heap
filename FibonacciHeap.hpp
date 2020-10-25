@@ -70,9 +70,15 @@ public:
 				q = true;
 			if(grados[cur->grado]) {
 
-				while(grados[cur->grado]) {
-					cur = unite(grados[cur->grado], cur);
-					grados[cur->grado - 1] = nullptr;
+				while(grados[cur->grado] && cur->next != head) {
+					if (grados[cur->grado] != cur) {
+						cur = unite(grados[cur->grado], cur);
+						grados[cur->grado - 1] = nullptr;
+					}
+
+					else {
+						cur = cur->next;
+					}
 				}
 				grados[cur->grado] = cur;
 			}
@@ -108,17 +114,15 @@ public:
 				first_node->init_children(second_node);
 			}
 			else {
-				first_node->add_child(second_node);
+				if (first_node != second_node) {
+					first_node->add_child(second_node);
+				}
 			}
 
 			first_node->grado++;
 			return first_node;
 		}
 		else {
-	std::cout << "size "  << size << '\n' << "head " << head->key << " tail " << tail->key << " second " << min->key << '\n';
-			print_heap();
-
-
 			first_node->parent = second_node;
 			first_node->prev->next = first_node->next;
 			first_node->next->prev = first_node->prev;
@@ -126,33 +130,36 @@ public:
 			if(first_node == head) {
 				head = second_node;
 				
-				std::cout << "-----> first_node " << first_node->next->key << '\n'; 
 				if (head == tail ) {
 					tail = second_node->next;
 				}
 
+
 				else if (first_node->next != second_node) {
-
-					tail->next = first_node->next;
-					first_node->next = head;
-					head->prev = first_node->next;
-
 					tail = first_node->next;
-	std::cout << "----------> after size "  << size << '\n' << "head " << head->key << " tail " << tail->key << " first " << first_node-> key  << " second " << second_node->key << '\n';
-print_heap();
-
-
-
 				}
+
+
 			}
 			if(first_node == tail) {
-				tail = second_node;
+				if (first_node == second_node) {
+					tail = head;
+				}
+					
+				else {
+				tail = second_node;}
 			}
 			if(!second_node->head) {
 				second_node->init_children(first_node);
 			}
 			else {
-				second_node->add_child(first_node);
+				if (first_node != second_node) {
+	/*		std::cout << "5555----------> after grados size " << size << "-> " << grados.size() << '\n' << "head " << head->key << " tail " << tail->key << " first " << first_node-> key  << " second " << second_node->key << " first node nex " << tail->prev->key << '\n';
+print_heap();
+*/
+					 second_node->add_child(first_node);
+				}
+
 			}
 			second_node->grado++;
 
@@ -191,6 +198,7 @@ print_heap();
 		Node<T>* current = head;
 		Node<T>* n_min = current;
 		do {
+			//std::cout << "------> " << current->key << '\n';
 			Node<T> * next_ = current->next;
 			if (current->key < n_min->key) n_min = current;
 
@@ -201,6 +209,7 @@ print_heap();
 	}
 
 	void meld(Node<T> *node) {
+
 		if(!node->head) {
 			if(head == tail) {
 				head = nullptr;
@@ -221,11 +230,13 @@ print_heap();
 		    return;
 		}
 		Node<T>* cur = node->head;
+		
 		do {
 			Node<T>* next_ = cur->next;	
 			cur->parent = nullptr;
 			cur = next_;
 		} while(cur != node->head);
+		
 		if(head == tail) {
 			head = node->head;
 			tail = node->tail;
