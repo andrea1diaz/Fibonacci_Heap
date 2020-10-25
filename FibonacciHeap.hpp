@@ -5,6 +5,7 @@
 #include <cmath>
 #include <list>
 #include <vector>
+#include <algorithm>
 
 #include "Node.hpp"
 #include "Lector.hpp"
@@ -15,7 +16,7 @@ class FibonacciHeap {
 private:
 	int size;
 	std::vector<Node<T> *> grados;
-	std::list<Node<T> *> roots;
+	std::vector<Node<T> *> roots;
 	Node<T> *min;
 	Node<T> *head;
 	Node<T> *tail;
@@ -34,25 +35,17 @@ public:
 
 	Node<T>* insert (T key) {
 		Node<T>* cur = new Node<T> (key);
+
+		roots.push_back(cur);
+
 		if (size == 0) {
 			min = cur;
-			tail = head = cur;
-			cur->prev = cur;
-			cur->next = cur;
 		}
-		else {
-			tail->next = cur;
-			cur->prev = tail;
-			cur->next = head;
-			head->prev = cur;
-
-			tail = cur; 
-
-			if(min->key > key) {
-				min = cur;
-			}
+		else if (min->key > key) {
+			min = cur;
 		}
-		size ++;
+		
+		size++;
 		return cur;
 	}
 
@@ -60,27 +53,27 @@ public:
 
 	void compact_tree() {
 		grados = std::vector<Node<T> *> (size, nullptr);
-		Node<T>* cur = head;
+		std::vector<Node<T>*> nuevosRoots;
 
-		do {
-			Node<T> *next = cur->next;
-			if(grados[cur->grado]) {
-
-				while(grados[cur->grado]) {
-					cur = unite(grados[cur->grado], cur);
-					grados[cur->grado - 1] = nullptr;
+		for (auto it = roots.begin(); it != roots.end(); it++) {
+			if(!grados[(*it)->grado]) {
+				grados[(*it)->grado] = *it;
+			} else {
+				Node<T>* tmp = *it;
+				while(grados[tmp->grado]) {
+					tmp = unite(grados[tmp->grado], tmp);
+					grados[tmp->grado - 1] = nullptr;
 				}
-				grados[cur->grado] = cur;
+				grados[tmp->grado] = tmp;
 			}
-			else {
-				grados[cur->grado] = cur;
-			}
+		}
 
-			cur = next;
+		for (auto i : grados) {
+			if (i)
+				nuevosRoots.push_back(i);
+		}
 
-
-		} while(cur != head);
-
+		roots = nuevosRoots;
 	}
 
 
@@ -88,15 +81,6 @@ public:
 		
 		if(first_node->key < second_node->key) {
 			second_node->parent = first_node;
-			second_node->prev->next = second_node->next;
-			second_node->next->prev = second_node->prev;
-
-			if(second_node == head) {
-				head = first_node;
-			}
-			if(second_node == tail) {
-				tail = first_node;
-			}
 			if(!first_node->head) {
 				first_node->init_children(second_node);
 			}
@@ -109,16 +93,7 @@ public:
 			return first_node;
 		}
 		else {
-
 			first_node->parent = second_node;
-			first_node->prev->next = first_node->next;
-			first_node->next->prev = first_node->prev;
-			if(first_node == head) {
-				head = second_node;
-			}
-			if(first_node == tail) {
-				tail = second_node;
-			}
 			if(!second_node->head) {
 				second_node->init_children(first_node);
 			}
@@ -136,28 +111,40 @@ public:
 
 	Node<T>* extract_min() {
 		// Retornar el nodo (Kruskal)
-		meld(min);
-		Node<T>* cur = min;
+		auto it = std::find(roots.begin(), roots.end(), min);
+		Node<T>* ret(min);
 
-		min = new_min();
+		if (min->head) {
+			auto cur = min->head;
+			do {
+				roots.push_back(cur);
+				cur = cur->next;
+			} while (cur != min->head);
+		}
+
+		roots.erase(it);
+		new_min();
 	
 		compact_tree();
 
 		size--;
 
-		return cur;
+		return ret;
     }
 
 	
 
-	Node<T>* new_min() {
-		Node<T>* current = head;
-		Node<T>* min = current;
-		do {
-			if (current->key < min->key) min = current;
-			current = current->next;
-		} while(current != head);
-		return min;
+	void new_min() {
+		auto m = roots.begin();
+		Node<T>* mip = *m;
+
+		for (auto it = roots.begin(); it != roots.end(); it++) {
+			if (mip->key > (*it)->key) {
+				mip = *it;
+			}
+		}
+
+		min = mip;
 	}
 
 	void meld(Node<T> *node) {
@@ -183,78 +170,74 @@ public:
         }
 	}
 	
-	void decrease_key(Node<T> *node, T new_key) {
-        node->key = new_key;
+	// void decrease_key(Node<T> *node, T new_key) {
+    //     node->key = new_key;
 
-		if (!node->parent) {
-			if (min->key > new_key)
-				min = node;
-		}
+	// 	if (!node->parent) {
+	// 		if (min->key > new_key)
+	// 			min = node;
+	// 	}
 
-		else {
-			if (node->parent->key > new_key) {
-					node->isBlack = false;
+	// 	else {
+	// 		if (node->parent->key > new_key) {
+	// 				node->isBlack = false;
 					
-					node->prev->next = node->next;
-					node->next->prev = node->prev;
+	// 				node->prev->next = node->next;
+	// 				node->next->prev = node->prev;
 
-					tail->next = node;
-					node->prev = tail;
-					node->next = head;
-					head->prev = node;
+	// 				tail->next = node;
+	// 				node->prev = tail;
+	// 				node->next = head;
+	// 				head->prev = node;
 
-					tail = node;
+	// 				tail = node;
 
-					node->parent->grado--;
+	// 				node->parent->grado--;
 
-				if (!node->parent->isBlack) {
-					node->parent->isBlack = true;
-					node->parent = nullptr;
+	// 			if (!node->parent->isBlack) {
+	// 				node->parent->isBlack = true;
+	// 				node->parent = nullptr;
 
-					compact_tree();
-				}
+	// 				compact_tree();
+	// 			}
 
-				else {
-					Node<T> *current = node->parent;
-					Node<T> *tmp = current;
+	// 			else {
+	// 				Node<T> *current = node->parent;
+	// 				Node<T> *tmp = current;
 					
-					do {
-						current->prev->next = current->next;
-						current->next->prev = current->prev;
+	// 				do {
+	// 					current->prev->next = current->next;
+	// 					current->next->prev = current->prev;
 
-						tail->next = current;
-						current->prev = tail;
-						current->next = head;
-						head->prev = current;
+	// 					tail->next = current;
+	// 					current->prev = tail;
+	// 					current->next = head;
+	// 					head->prev = current;
 
-						tail = node;
+	// 					tail = node;
 
-						current->isBlack = false;
+	// 					current->isBlack = false;
 
-						tmp = current;
-						current = current->parent;
-						current->grado--;
+	// 					tmp = current;
+	// 					current = current->parent;
+	// 					current->grado--;
 						
-						tmp->parent = nullptr; // voy a revisarlo una vez más, pero lo subo y lo pruebas? 
+	// 					tmp->parent = nullptr; // voy a revisarlo una vez más, pero lo subo y lo pruebas? 
 						
-					} while (current->parent->isBlack && current->parent);
-				}
-			}
+	// 				} while (current->parent->isBlack && current->parent);
+	// 			}
+	// 		}
 			
-			else {
-				// nada
-			}
-		}
-    }
+	// 		else {
+	// 			// nada
+	// 		}
+	// 	}
+    // }
 
 	void print_heap () {
-		auto cur = head;
-		if (cur) {
-            do {
-                std::cout << cur->key << std::endl;
-                cur->print_children();
-                cur = cur->next;
-            } while (cur != head);
+		for(auto it = roots.begin(); it != roots.end(); it++) {
+        	std::cout << (*it)->key << std::endl;
+            (*it)->print_children();
 		}
 	}
 

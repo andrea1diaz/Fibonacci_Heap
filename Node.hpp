@@ -33,6 +33,36 @@ public:
 		grado = 0;
 	}
 
+	Node(Node<T>* node) {
+		grado = node->grado;
+		key = node->key;
+		children = node->children;
+		parent = node->parent;
+		next = node->next;
+		prev = node->prev;
+		head = node->head;
+		tail = node->tail;
+		imagenes = node->imagenes;
+		coordenadas = node->coordenadas	;
+		uv = node->uv;
+		isBlack = node->isBlack;
+	}
+
+	void copiar(Node<T>* node) {
+		grado = node->grado;
+		key = node->key;
+		children = node->children;
+		parent = node->parent;
+		next = node->next;
+		prev = node->prev;
+		head = node->head;
+		tail = node->tail;
+		imagenes = node->imagenes;
+		coordenadas = node->coordenadas	;
+		uv = node->uv;
+		isBlack = node->isBlack;
+	}
+
 	void init_children (Node<T>* node) {
 		tail = head = node;
 
