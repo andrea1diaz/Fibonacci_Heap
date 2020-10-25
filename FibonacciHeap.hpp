@@ -245,10 +245,10 @@ public:
 	T distance(std::vector<T> a, std::vector<T> b) {
 		T dist = 0;
 		for (int i = 0; i < a.size(); ++i) {
-			dist += (a[i] - b[i]) * (a[i] - b[i]);
+			dist += abs(a[i] - b[i]);
 		}
 
-		return sqrt(dist);
+		return (dist);
 	}
 
 private:
